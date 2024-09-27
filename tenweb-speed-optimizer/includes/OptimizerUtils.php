@@ -154,6 +154,42 @@ class OptimizerUtils
     }
 
     /**
+     * Finds the position of the <body> tag in an HTML string.
+     *
+     * This method searches for the first occurrence of the <body> tag
+     * in the given HTML content. If a </head> tag is found after the <body>
+     * tag, it will search for the next <body> tag.
+     *
+     * @param string $haystack the HTML content as a string
+     *
+     * @return int|false the position of the <body> tag, or false if not found
+     */
+    public static function get_body_position($haystack)
+    {
+        // Find the first occurrence of the <body> tag
+        $bodyPosition = self::strpos($haystack, '<body');
+
+        // If <body> tag is not found, return false
+        if ($bodyPosition === false) {
+            return false;
+        }
+
+        // Extract substring starting from the <body> tag
+        $afterBody = substr($haystack, $bodyPosition);
+
+        // Check if there's a </head> tag after the found <body> tag
+        $headClosePosition = self::strpos($afterBody, '</head>');
+
+        // If </head> is found after <body>, search for the next <body> tag
+        if ($headClosePosition !== false) {
+            // Search for the next <body> tag after </head>
+            $bodyPosition = self::strpos($haystack, '<body', $bodyPosition + 1);
+        }
+
+        return $bodyPosition;
+    }
+
+    /**
      * Multibyte-capable strrpos() if support is available on the server.
      * If not, it falls back to using \strrpos().
      *
@@ -1090,13 +1126,18 @@ class OptimizerUtils
      */
     public static function inject_in_html($content, $payload, $where)
     {
+
         if ($where[0] === '</body>') {
             $position_function = 'strrpos'; //choose the latest matching element
         } else {
             $position_function = 'strpos'; //choose the first matching element
         }
 
-        $position = self::$position_function($content, $where[0]);
+        if ($where[0] === '<body') {
+            $position = self::get_body_position($content);
+        } else {
+            $position = self::$position_function($content, $where[0]);
+        }
 
         if (false !== $position) {
             // Found the tag, setup content/injection as specified.
@@ -2863,5 +2904,28 @@ class OptimizerUtils
     public static function check_admin_capabilities()
     {
         return current_user_can('manage_options');
+    }
+
+    public static function dirsize($dir)
+    {
+        @$dh = opendir($dir);
+        $size = 0;
+
+        if ($dh) {
+            while ($file = @readdir($dh)) { // phpcs:ignore
+                if ($file != '.' and $file != '..') {
+                    $path = $dir . '/' . $file;
+
+                    if (is_dir($path)) {
+                        $size += self::dirsize($path); // recursive in sub-folders
+                    } elseif (is_file($path)) {
+                        $size += filesize($path); // add file
+                    }
+                }
+            }
+            @closedir($dh);
+        }
+
+        return $size;
     }
 }

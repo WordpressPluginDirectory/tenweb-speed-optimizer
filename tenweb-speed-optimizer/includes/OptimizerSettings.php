@@ -39,6 +39,14 @@ class OptimizerSettings
             'description' => 'Enable this option to reuse generated static html files for every request and speed up page loading speed.',
             'accepted_value' => ['on', 'off'],
         ],
+        'two_page_cache_user' => [
+            'type' => 'checkbox',
+            'default' => '',
+            'tab' => 'general',
+            'title' => 'Enable page cache for logged in users',
+            'description' => 'Enable this option to reuse generated static html files for every request and speed up page loading speed. Page cache lifetime will be 2 days and size limit 3Gb',
+            'accepted_value' => ['on', 'off'],
+        ],
         'two_serve_gzip' => [
             'type' => 'checkbox',
             'default' => 'on',

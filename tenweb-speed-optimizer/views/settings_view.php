@@ -19,6 +19,7 @@ $two_youtube_vimeo_iframe_lazyload = $TwoSettings->get_settings('two_youtube_vim
 $two_video_lazyload = $TwoSettings->get_settings('two_video_lazyload');
 $two_gzip = $TwoSettings->get_settings('two_gzip');
 $two_page_cache = $TwoSettings->get_settings('two_page_cache');
+$two_page_cache_user = $TwoSettings->get_settings('two_page_cache_user');
 $two_serve_gzip = $TwoSettings->get_settings('two_serve_gzip');
 $two_empty_encoding_serve_gzip = $TwoSettings->get_settings('two_empty_encoding_serve_gzip');
 $two_enable_plugin_autoupdate = $TwoSettings->get_settings('two_enable_plugin_autoupdate');
@@ -178,6 +179,7 @@ $aggregate_js_check = ($two_aggregate_js == 'on') ? 'checked' : '';
 $aggregate_css_check = ($two_aggregate_css == 'on') ? 'checked' : '';
 $two_gzip_check = ($two_gzip == 'on') ? 'checked' : '';
 $two_page_cache_check = ($two_page_cache == 'on') ? 'checked' : '';
+$two_page_cache_user_check = ($two_page_cache_user == 'on') ? 'checked' : '';
 $two_serve_gzip_check = ($two_serve_gzip == 'on') ? 'checked' : '';
 $two_empty_encoding_serve_gzip_check = ($two_empty_encoding_serve_gzip == 'on') ? 'checked' : '';
 $two_enable_plugin_autoupdate_check = ($two_enable_plugin_autoupdate == 'on') ? 'checked' : '';
@@ -300,7 +302,6 @@ $show_bg_lazy_load = ($lazy_load_type === 'vanilla') ? '' : 'display:none';
                     <p class="description"><?php _e('Enable this option to write recommended caching headers in .htaccess file', 'tenweb-speed-optimizer'); ?></p>
 
                 <?php } ?>
-                <?php if (!\TenWebOptimizer\OptimizerUtils::check_if_hosted_website()) { ?>
                 <div class="two_settings_option">
                     <input <?php echo esc_html($two_page_cache_check); ?> type="checkbox" <?php echo (!$valid_permalink_for_page_cache) ? 'disabled' : ''; ?> name="two_page_cache" id="two_page_cache">
                     <label for="two_page_cache" class="wd-label"><?php _e('Enable page cache', 'tenweb-speed-optimizer'); ?></label>
@@ -318,12 +319,17 @@ $show_bg_lazy_load = ($lazy_load_type === 'vanilla') ? '' : 'display:none';
                   _e('Enable this option to reuse generated static html files for every request and speed up page loading speed.', 'tenweb-speed-optimizer');
                   ?></p>
                 </div>
+                <div class="two_settings_option" style="<?php echo esc_attr($show_page_cache_life_time); ?>">
+                    <input <?php echo esc_html($two_page_cache_user_check); ?> type="checkbox" name="two_page_cache_user" id="two_page_cache_user">
+                    <label for="two_page_cache_user" class="wd-label"><?php _e('Enable page cache for logged in users', 'tenweb-speed-optimizer'); ?></label>
+
+                <p class="description"><?php _e('Enable this option to reuse generated static html files for every request and speed up page loading speed.', 'tenweb-speed-optimizer'); ?></p>
+                </div>
                     <div class="two_settings_option" style="<?php echo esc_attr($show_page_cache_life_time); ?>">
                         <label for="two_page_cache_life_time" class="wd-label"><?php _e('Page cache life time', 'tenweb-speed-optimizer'); ?></label>
                         <input type="number" name="two_page_cache_life_time" id="two_page_cache_life_time" value="<?php echo esc_attr($two_page_cache_life_time); ?>">
                         <p class="description"><?php _e('Page cache life time in seconds. The default value is 7 days.', 'tenweb-speed-optimizer'); ?></p>
                     </div>
-                <?php } ?>
                 <div class="two_settings_option">
                     <input <?php echo esc_html($two_enable_plugin_autoupdate_check); ?> type="checkbox" name="two_enable_plugin_autoupdate" id="two_enable_plugin_autoupdate">
                     <label for="two_enable_plugin_autoupdate" class="wd-label"><?php _e('Enable plugin autoupdate', 'tenweb-speed-optimizer'); ?></label>

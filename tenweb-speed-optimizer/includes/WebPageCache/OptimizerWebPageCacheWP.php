@@ -46,6 +46,16 @@ class OptimizerWebPageCacheWP
 
         add_filter('page_row_actions', [$this, 'post_row_actions'], 10, 2);
         add_filter('post_row_actions', [$this, 'post_row_actions'], 10, 2);
+
+        if (is_user_logged_in()) {
+            // phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___COOKIE, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+            $logged_in_cookie = sanitize_text_field($_COOKIE[LOGGED_IN_COOKIE]);
+            // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.cookies_setcookie
+            setcookie('tenweb_so_page_cache_hash', md5($logged_in_cookie), time() + $TwoSettings->get_settings('two_page_cache_life_time'), COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
+        } else {
+            // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.cookies_setcookie
+            setcookie('tenweb_so_page_cache_hash', '', time() + $TwoSettings->get_settings('two_page_cache_life_time'), COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
+        }
     }
 
     public function delete_all_cache()
@@ -60,11 +70,6 @@ class OptimizerWebPageCacheWP
 
     public function enable_disable_page_cache($old_value, $value, $option)
     {
-        if (TENWEB_SO_HOSTED_ON_10WEB) {
-            $this->disable_page_cache();
-
-            return;
-        }
         $value = json_decode($value, true);
         $value = (isset($value[ 'two_page_cache' ])) ? $value['two_page_cache'] : '';
 
@@ -115,7 +120,8 @@ class OptimizerWebPageCacheWP
 
     public function add_wp_cache_constant()
     {
-        if (!is_writable($this->wp_config_file_path) || !is_readable($this->wp_config_file_path) || TENWEB_SO_HOSTED_ON_10WEB) { // phpcs:ignore
+        // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_is_writable
+        if (!is_writable($this->wp_config_file_path) || !is_readable($this->wp_config_file_path)) {
             return false;
         }
         $file_content = file_get_contents($this->wp_config_file_path); // phpcs:ignore
@@ -132,7 +138,8 @@ class OptimizerWebPageCacheWP
 
     public function remove_wp_cache_constant()
     {
-        if (!is_writable($this->wp_config_file_path) || !is_readable($this->wp_config_file_path) || TENWEB_SO_HOSTED_ON_10WEB) { // phpcs:ignore
+        // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.file_ops_is_writable
+        if (!is_writable($this->wp_config_file_path) || !is_readable($this->wp_config_file_path)) {
             return false;
         }
 

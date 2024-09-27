@@ -278,11 +278,11 @@ jQuery("document").ready(function () {
     });
     jQuery("#two_page_cache").change(function () {
         if (this.checked) {
-            jQuery("#two_page_cache_life_time").parent().css({
+            jQuery("#two_page_cache_life_time, #two_page_cache_user").parent().css({
                 'display': 'block'
             });
         } else {
-            jQuery("#two_page_cache_life_time").parent().css({
+            jQuery("#two_page_cache_life_time, #two_page_cache_user").parent().css({
                 'display': 'none'
             });
 

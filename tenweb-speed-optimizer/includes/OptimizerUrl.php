@@ -35,9 +35,9 @@ class OptimizerUrl
     public const TWO_FASTCGI_NON_CACHED_PAGES_IF_COOKIE_EXISTS = [
         'comment_author',
         'wordpress_[a-f0-9]+',
+        'wordpress_logged_in_',
         'wp-postpass',
         'wordpress_no_cache',
-        'wordpress_logged_in',
         'woocommerce_cart_hash',
         'fm_cookie_[a-zA-Z0-9]+',
         'woocommerce_items_in_cart',
@@ -683,14 +683,16 @@ class OptimizerUrl
             }
         }
 
-        //check non-cached cookies
         if (isset($url) || $is_admin) {
             return true;
         }
 
-        foreach (self::TWO_FASTCGI_NON_CACHED_PAGES_IF_COOKIE_EXISTS as $nonCachedCookieName) {
-            if (!empty(OptimizerUtils::preg_grep_keys('~' . $nonCachedCookieName . '~', $_COOKIE))) { // phpcs:ignore
-                return 'Page has not allowed cookie: ' . $nonCachedCookieName;
+        //check non-cached cookies
+        if ('on' !== $TwoSettings->get_settings('two_page_cache_user')) {
+            foreach (self::TWO_FASTCGI_NON_CACHED_PAGES_IF_COOKIE_EXISTS as $nonCachedCookieName) {
+                if (!empty(OptimizerUtils::preg_grep_keys('~' . $nonCachedCookieName . '~', $_COOKIE))) { // phpcs:ignore
+                    return 'Page has not allowed cookie: ' . $nonCachedCookieName;
+                }
             }
         }
 

@@ -99,7 +99,13 @@ class OptimizerWebPageValidations
             return false;
         }
 
-        $rejected_cookies = '#wordpress_logged_in_.+|wp-postpass_|wptouch_switch_toggle|comment_author_|comment_author_email_#';
+        global $TwoSettings;
+        $rejected_cookies = '#wp-postpass_|wptouch_switch_toggle|comment_author_|comment_author_email_';
+
+        if ('on' !== $TwoSettings->get_settings('two_page_cache_user')) {
+            $rejected_cookies .= '|wordpress_logged_in_.+';
+        }
+        $rejected_cookies .= '#';
         $excluded_cookies = [];
 
         foreach (array_keys($_COOKIE) as $cookie_name) { // phpcs:ignore

@@ -200,7 +200,7 @@ class OptimizerMain
 
         $dir = OptimizerCache::get_path();
 
-        if ($this->dirsize($dir) > 1000000000) { // 1Gb
+        if (OptimizerUtils::dirsize($dir) > 1000000000) { // 1Gb
             $this->clear_cache(false, false, true, true, 'front_page', false, true, true, true);
         }
 
@@ -1083,29 +1083,6 @@ class OptimizerMain
         }
 
         return true;
-    }
-
-    public function dirsize($dir)
-    {
-        @$dh = opendir($dir);
-        $size = 0;
-
-        if ($dh) {
-            while ($file = @readdir($dh)) { // phpcs:ignore
-                if ($file != '.' and $file != '..') {
-                    $path = $dir . '/' . $file;
-
-                    if (is_dir($path)) {
-                        $size += $this->dirsize($path); // recursive in sub-folders
-                    } elseif (is_file($path)) {
-                        $size += filesize($path); // add file
-                    }
-                }
-            }
-            @closedir($dh);
-        }
-
-        return $size;
     }
 
     private function clear_cache()

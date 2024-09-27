@@ -412,6 +412,65 @@ class OptimizerAdmin
         if (isset($post->post_status) && $post->post_status === 'publish' && $update) {
             $permalink = get_permalink($post_ID);
             OptimizerWebPageCache::delete_cache_by_url($permalink);
+
+            if ('post' === $post->post_type && (int) get_option('page_for_posts') > 0) {
+                OptimizerWebPageCache::delete_cache_by_url(get_option('page_for_posts'));
+            }
+            $post_type_archive = get_post_type_archive_link($post->post_type);
+
+            if ($post_type_archive) {
+                OptimizerWebPageCache::delete_cache_by_url($post_type_archive);
+            }
+            // Add next post.
+            // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.get_adjacent_post_get_adjacent_post
+            $next_post = get_adjacent_post(false, '', false);
+
+            if ($next_post) {
+                OptimizerWebPageCache::delete_cache_by_url(get_permalink($next_post));
+            }
+
+            // Add next post in same category.
+            // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.get_adjacent_post_get_adjacent_post
+            $next_in_same_cat_post = get_adjacent_post(true, '', false);
+
+            if ($next_in_same_cat_post && $next_in_same_cat_post !== $next_post) {
+                OptimizerWebPageCache::delete_cache_by_url(get_permalink($next_in_same_cat_post));
+            }
+
+            // Add previous post.
+            // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.get_adjacent_post_get_adjacent_post
+            $previous_post = get_adjacent_post(false, '', true);
+
+            if ($previous_post) {
+                OptimizerWebPageCache::delete_cache_by_url(get_permalink($previous_post));
+            }
+
+            // Add previous post in same category.
+            // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.get_adjacent_post_get_adjacent_post
+            $previous_in_same_cat_post = get_adjacent_post(true, '', true);
+
+            if ($previous_in_same_cat_post && $previous_in_same_cat_post !== $previous_post) {
+                OptimizerWebPageCache::delete_cache_by_url(get_permalink($previous_in_same_cat_post));
+            }
+
+            // Add the author page.
+            $author_url = trailingslashit(get_author_posts_url($post->post_author));
+
+            if (trailingslashit(site_url()) !== $author_url && trailingslashit(home_url()) !== $author_url) {
+                OptimizerWebPageCache::delete_cache_by_url($author_url);
+            }
+
+            // Add all parents.
+            $parents = get_post_ancestors($post_ID);
+
+            if ((bool) $parents) {
+                foreach ($parents as $parent_id) {
+                    OptimizerWebPageCache::delete_cache_by_url(get_permalink($parent_id));
+                }
+            }
+
+            OptimizerWebPageCache::delete_cache_by_url(home_url());
+
             remove_action('save_post', [$this, 'post_clear_cache'], 10, 2);
         }
     }
@@ -1177,12 +1236,6 @@ class OptimizerAdmin
         global $TwoSettings;
         $TwoSettings->update_setting('two_clear_cache_date', $date);
         $TwoSettings->update_setting('tenweb_so_version', TENWEB_SO_VERSION);
-        //idk why this is here but it is dangerous because if something happens with template import cache is not cleared, and it is a more major issue than flushed cache
-        // todo Smbat please review why you added this
-//        // We do not want to clear the cache during template import.
-//        if ( get_option(TENWEB_PREFIX."_import_in_progress") == 1 ) {
-//          return false;
-//        }
         $dir = OptimizerCache::get_path();
         $delete_cache_db = OptimizerUtils::delete_all_cache_db();
         OptimizerCacheStructure::flushAllCache();

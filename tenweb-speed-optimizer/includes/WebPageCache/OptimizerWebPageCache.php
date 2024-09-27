@@ -3,6 +3,7 @@
 namespace TenWebOptimizer\WebPageCache;
 
 use TenWebOptimizer\OptimizerSettings;
+use TenWebOptimizer\OptimizerUtils;
 
 /*
  * Base class other (more-specific) classes inherit from.
@@ -44,16 +45,31 @@ class OptimizerWebPageCache
             return;
         }
 
+        if (!defined('TENWEB_SO_PER_USER_CACHE_LIFETIME')) {
+            define('TENWEB_SO_PER_USER_CACHE_LIFETIME', 172800); // 2 days
+        }
+
+        if (!defined('TENWEB_SO_PER_USER_CACHE_SIZE_LIMIT')) {
+            define('TENWEB_SO_PER_USER_CACHE_SIZE_LIMIT', 3000000000); // 3GB
+        }
+
         // Additional check for the old users who have cache enabled with old configs.
         if (!defined('TWO_PLUGIN_DIR_CACHE')) {
             define('TWO_PLUGIN_DIR_CACHE', WP_CONTENT_DIR . '/plugins/tenweb-speed-optimizer/');
         }
         require_once __DIR__ . '/OptimizerWebPageValidations.php';
 
+        require_once TWO_PLUGIN_DIR_CACHE . '/includes/OptimizerUtils.php';
+        require_once TWO_PLUGIN_DIR_CACHE . '/includes/OptimizerCache.php';
+        require_once TWO_PLUGIN_DIR_CACHE . '/includes/OptimizerUrl.php';
+        require_once TWO_PLUGIN_DIR_CACHE . '/includes/OptimizerSettings.php';
+        global $TwoSettings;
+        $TwoSettings = OptimizerSettings::get_instance();
         $this->validator = OptimizerWebPageValidations::get_instance();
 
         if ($this->can_process_page()) {
             $this->init();
+            $this->maybe_clear_all_cache();
             $this->process_page();
         }
     }
@@ -229,14 +245,6 @@ class OptimizerWebPageCache
             return false;
         }
 
-        require_once TWO_PLUGIN_DIR_CACHE . '/includes/OptimizerUtils.php';
-        require_once TWO_PLUGIN_DIR_CACHE . '/includes/OptimizerCache.php';
-        require_once TWO_PLUGIN_DIR_CACHE . '/includes/OptimizerSettings.php';
-        require_once TWO_PLUGIN_DIR_CACHE . '/includes/OptimizerUrl.php';
-
-        global $TwoSettings;
-        $TwoSettings = OptimizerSettings::get_instance();
-
         if (!$this->validator->allowed_by_optimizer()) {
             return false;
         }
@@ -252,8 +260,13 @@ class OptimizerWebPageCache
         if (!$cache_life_time) {
             $cache_life_time = $TwoSettings->get_default_setting('two_page_cache_life_time');
         }
+        $per_user_cache = $TwoSettings->get_settings('two_page_cache_user');
 
-        if (time() - filemtime($file_to_serve) < $cache_life_time) {
+        if ($per_user_cache === 'on') {
+            $cache_life_time = TENWEB_SO_PER_USER_CACHE_LIFETIME;
+        }
+
+        if ((time() - filemtime($file_to_serve) < $cache_life_time)) {
             return false;
         }
 
@@ -368,9 +381,36 @@ class OptimizerWebPageCache
             $cache_dir_name = rtrim($request_uri, '/');
             $cache_dir_name = ltrim($cache_dir_name, '/');
         }
+        global $TwoSettings;
+        $cache_hash = '';
+
+        if ('on' === $TwoSettings->get_settings('two_page_cache_user')) {
+            // phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___COOKIE
+            $cookies = $_COOKIE;
+            $cookie_name = array_filter(array_keys($cookies), function ($cookie) {
+                return strpos($cookie, 'wordpress_logged_in_') === 0;
+            });
+
+            if (! empty($cookie_name)) {
+                $cookie_name = reset($cookie_name);
+                $cookie_value = $cookies[ $cookie_name ];
+                $username = explode('|', $cookie_value)[ 0 ];
+            }
+
+            if (! empty($username) && isset($cookies[ 'tenweb_so_page_cache_hash' ])) {
+                $unique_hash = $cookies[ 'tenweb_so_page_cache_hash' ];
+
+                // This is an additional check to make sure the cookies are identical,
+                // it will pass if both cookies are just identical,
+                // needs to be improved to make sure user is logged in.
+                if (md5($cookie_value) === $unique_hash) {
+                    $cache_hash = '-' . $username . '-' . $unique_hash;
+                }
+            }
+        }
 
         // add $host, to support multisite to
-        $cache_dir = TENWEB_SO_PAGE_CACHE_DIR . $host . '/';
+        $cache_dir = TENWEB_SO_PAGE_CACHE_DIR . $host . $cache_hash . '/';
 
         if ($cache_dir_name) {
             $cache_dir .= $cache_dir_name . '/';
@@ -407,5 +447,14 @@ class OptimizerWebPageCache
         }
 
         return self::$instance;
+    }
+
+    private function maybe_clear_all_cache()
+    {
+        global $TwoSettings;
+
+        if ($TwoSettings->get_settings('two_page_cache_user') === 'on' && OptimizerUtils::dirsize(TENWEB_SO_PAGE_CACHE_DIR) > TENWEB_SO_PER_USER_CACHE_SIZE_LIMIT) {
+            self::delete_all_cached_pages();
+        }
     }
 }

@@ -179,7 +179,7 @@ class Utils
         $data = get_option(TENWEBIO_PREFIX . '_webp_converted', array());
         $attachment_data = self::getAttachmentData($url);
         $data[] = $attachment_data['absolute_path'];
-        update_option(TENWEBIO_PREFIX . '_webp_converted', $data);
+        update_option(TENWEBIO_PREFIX . '_webp_converted', $data, false);
     }
 
     /**
