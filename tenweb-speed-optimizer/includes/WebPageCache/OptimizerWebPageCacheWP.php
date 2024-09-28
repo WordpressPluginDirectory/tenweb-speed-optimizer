@@ -51,10 +51,10 @@ class OptimizerWebPageCacheWP
             // phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___COOKIE, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
             $logged_in_cookie = sanitize_text_field($_COOKIE[LOGGED_IN_COOKIE]);
             // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.cookies_setcookie
-            setcookie('tenweb_so_page_cache_hash', md5($logged_in_cookie), time() + $TwoSettings->get_settings('two_page_cache_life_time'), COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
+            setcookie('tenweb_so_page_cache_hash', md5($logged_in_cookie), time() + (int) $TwoSettings->get_settings('two_page_cache_life_time'), COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
         } else {
             // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.cookies_setcookie
-            setcookie('tenweb_so_page_cache_hash', '', time() + $TwoSettings->get_settings('two_page_cache_life_time'), COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
+            setcookie('tenweb_so_page_cache_hash', '', time() + (int) $TwoSettings->get_settings('two_page_cache_life_time'), COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
         }
     }
 
