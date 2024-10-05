@@ -47,14 +47,18 @@ class OptimizerWebPageCacheWP
         add_filter('page_row_actions', [$this, 'post_row_actions'], 10, 2);
         add_filter('post_row_actions', [$this, 'post_row_actions'], 10, 2);
 
-        if (is_user_logged_in()) {
-            // phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___COOKIE, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
-            $logged_in_cookie = sanitize_text_field($_COOKIE[LOGGED_IN_COOKIE]);
-            // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.cookies_setcookie
-            setcookie('tenweb_so_page_cache_hash', md5($logged_in_cookie), time() + (int) $TwoSettings->get_settings('two_page_cache_life_time'), COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
-        } else {
-            // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.cookies_setcookie
-            setcookie('tenweb_so_page_cache_hash', '', time() + (int) $TwoSettings->get_settings('two_page_cache_life_time'), COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
+        if ($TwoSettings->get_settings('two_page_cache') === 'on' && $TwoSettings->get_settings('two_page_cache_user') === 'on') {
+            if (is_user_logged_in()) {
+                // phpcs:ignore WordPressVIPMinimum.Variables.RestrictedVariables.cache_constraints___COOKIE, WordPress.Security.ValidatedSanitizedInput.InputNotValidated
+                $logged_in_cookie = sanitize_text_field($_COOKIE[LOGGED_IN_COOKIE]);
+                // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.cookies_setcookie
+                setcookie('tenweb_so_page_cache_hash', md5($logged_in_cookie), time() + (int) $TwoSettings->get_settings('two_page_cache_life_time'), COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
+            } else {
+                if (isset($_COOKIE['tenweb_so_page_cache_hash'])) {
+                    // phpcs:ignore WordPressVIPMinimum.Functions.RestrictedFunctions.cookies_setcookie
+                    setcookie('tenweb_so_page_cache_hash', '', time() + (int) $TwoSettings->get_settings('two_page_cache_life_time'), COOKIEPATH, COOKIE_DOMAIN, is_ssl(), true);
+                }
+            }
         }
     }
 
