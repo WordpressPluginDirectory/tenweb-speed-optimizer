@@ -325,7 +325,11 @@ class OptimizerWebPageCache
     public static function delete_cache_by_url($url)
     {
         $parsed_url = wp_parse_url($url);
-        $is_home_url = self::is_home($parsed_url['path']);
+        $is_home_url = false;
+
+        if (isset($parsed_url['path'])) {
+            $is_home_url = self::is_home($parsed_url['path']);
+        }
         self::delete_page_cache(self::get_cache_dir_for_page_from_url($url), $is_home_url);
     }
 

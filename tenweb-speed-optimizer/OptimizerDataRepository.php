@@ -351,7 +351,7 @@ class OptimizerDataRepository
         if (!empty($filter)) {
             $filter_arr = explode(',', $filter);
         }
-        global $TwoSettings;
+        $TwoSettings = new \TenWebOptimizer\OptimizerSettings();
         $settings_data = $TwoSettings->settings_names;
         $default_settings = $TwoSettings->default_settings;
         $two_settings = get_option('two_settings');

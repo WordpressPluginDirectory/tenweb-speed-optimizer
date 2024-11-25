@@ -147,9 +147,9 @@
             "source": {
                 "type": "git",
                 "url": "ssh://git@gitlab.10web.io:6202/10web-utils/tenweb-authorization.git",
-                "reference": "7993a20e971e04412f6c11ac81339197fa51bfd5"
+                "reference": "16a820e0be9f95255404101d2d057394a5ae9d0d"
             },
-            "time": "2024-05-07T11:49:37+00:00",
+            "time": "2024-10-25T11:48:14+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "source",
@@ -536,15 +536,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/monperrus/crawler-user-agents.git",
-                "reference": "6c0133b66cc2a01dc582a0efdcdddab6626b6f48"
+                "reference": "e464fa7cb22920f3927cd85d7de32aeedfbf6c85"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/monperrus/crawler-user-agents/zipball/6c0133b66cc2a01dc582a0efdcdddab6626b6f48",
-                "reference": "6c0133b66cc2a01dc582a0efdcdddab6626b6f48",
+                "url": "https://api.github.com/repos/monperrus/crawler-user-agents/zipball/e464fa7cb22920f3927cd85d7de32aeedfbf6c85",
+                "reference": "e464fa7cb22920f3927cd85d7de32aeedfbf6c85",
                 "shasum": ""
             },
-            "time": "2024-09-25T08:31:49+00:00",
+            "time": "2024-10-23T05:56:48+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -747,17 +747,17 @@
         },
         {
             "name": "symfony/filesystem",
-            "version": "v5.4.44",
-            "version_normalized": "5.4.44.0",
+            "version": "v5.4.45",
+            "version_normalized": "5.4.45.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/filesystem.git",
-                "reference": "76c3818964e9d32be3862c9318ae3ba9aa280ddc"
+                "reference": "57c8294ed37d4a055b77057827c67f9558c95c54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/filesystem/zipball/76c3818964e9d32be3862c9318ae3ba9aa280ddc",
-                "reference": "76c3818964e9d32be3862c9318ae3ba9aa280ddc",
+                "url": "https://api.github.com/repos/symfony/filesystem/zipball/57c8294ed37d4a055b77057827c67f9558c95c54",
+                "reference": "57c8294ed37d4a055b77057827c67f9558c95c54",
                 "shasum": ""
             },
             "require": {
@@ -769,7 +769,7 @@
             "require-dev": {
                 "symfony/process": "^5.4|^6.4"
             },
-            "time": "2024-09-16T14:52:48+00:00",
+            "time": "2024-10-22T13:05:35+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -797,7 +797,7 @@
             "description": "Provides basic utilities for the filesystem",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/filesystem/tree/v5.4.44"
+                "source": "https://github.com/symfony/filesystem/tree/v5.4.45"
             },
             "funding": [
                 {

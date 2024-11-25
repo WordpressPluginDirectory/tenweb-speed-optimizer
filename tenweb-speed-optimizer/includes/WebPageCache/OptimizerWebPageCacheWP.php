@@ -159,7 +159,8 @@ class OptimizerWebPageCacheWP
             return false;
         }
         $configs = [];
-        $configs['two_settings'] = get_option('two_settings');
+        $TwoSettings = new \TenWebOptimizer\OptimizerSettings();
+        $configs['two_settings'] = json_encode($TwoSettings->get_settings()); // phpcs:ignore
 
         return (bool) file_put_contents($this->page_cache_config_dir . '/config.json', json_encode($configs)); // phpcs:ignore
     }

@@ -1090,6 +1090,7 @@ class OptimizerMain
         $dir = OptimizerCache::get_path();
         $delete_cache_db = OptimizerUtils::delete_all_cache_db();
         $delete_cache_file = OptimizerUtils::delete_all_cache_file($dir, [$dir, $dir . '/css', $dir . '/js']);
+        OptimizerUtils::flushCloudflareCache();
         do_action('tenweb_purge_all_caches');
 
         return $delete_cache_file && $delete_cache_db;

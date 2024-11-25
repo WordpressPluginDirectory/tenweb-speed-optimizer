@@ -30,6 +30,8 @@ class ProductState
     public $parent_theme_name = "";//@type string
     public $theme_errors = array();//@type array
 
+    public $is_autoupdate_enabled = 0;//@type int [0,1]
+
     /**
      * ProductState constructor.
      *
@@ -153,22 +155,28 @@ class ProductState
         $this->screenshot = $url;
     }
 
+    public function set_is_autoupdate_enabled($is_autoupdate_enabled)
+    {
+        $this->is_autoupdate_enabled = (int)$is_autoupdate_enabled;
+    }
+
     public function get_info()
     {
         $state = array(
-            'product_id'     => $this->product_id,
-            'slug'           => $this->slug,
-            'title'          => $this->title,
-            'description'    => $this->description,
-            'version'        => $this->version,
-            'installed'      => $this->installed ? 1 : 0,
-            'active'         => $this->active ? 1 : 0,
-            'network_active' => $this->network_active ? 1 : 0,
-            'is_paid'        => $this->is_paid ? 1 : 0,
-            'screenshot'     => $this->screenshot,
-            'tenweb_product' => $this->tenweb_product ? 1 : 0,
-            'author'         => $this->author,
-            'repo_version'   => $this->repo_version
+            'product_id'         => $this->product_id,
+            'slug'               => $this->slug,
+            'title'              => $this->title,
+            'description'        => $this->description,
+            'version'            => $this->version,
+            'installed'          => $this->installed ? 1 : 0,
+            'active'             => $this->active ? 1 : 0,
+            'network_active'     => $this->network_active ? 1 : 0,
+            'is_paid'            => $this->is_paid ? 1 : 0,
+            'screenshot'         => $this->screenshot,
+            'tenweb_product'     => $this->tenweb_product ? 1 : 0,
+            'author'             => $this->author,
+            'repo_version'       => $this->repo_version,
+            'autoupdate_enabled' => $this->is_autoupdate_enabled
         );
 
         if ($this->type === "theme") {

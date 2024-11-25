@@ -195,8 +195,11 @@ class OptimizerAdmin
             add_action('wp_ajax_two_css_options', [ $this, 'save_css_options' ]);
 
             add_action('wp_ajax_two_get_posts_for_critical', [ $this, 'get_posts_for_critical' ]);
+            // TODO: BOOST-1575 Ensure that the cache for the updated post is cleared for both logged-in and non-logged-in users.
+            // Once TODO is fixed, delete the 'post_clear_all_cache' function and use the post_clear_cache.
+            //add_action('save_post', [$this, 'post_clear_cache'], 10, 3); // Clearing all the caches to handle templates. Editing a template will clear entire cache.
+            add_action('save_post', [$this, 'post_clear_all_cache'], 10, 3); // Clearing all the page caches
 
-            add_action('save_post', [$this, 'post_clear_cache'], 10, 3); // Clearing all the caches to handle templates. Editing a template will clear entire cache.
             add_action('switch_theme', [$this, 'clear_cache'], 10, 0);  // When user change theme.
             add_action('update_option_show_on_front', [ $this, 'change_front_page' ], 10, 3);  // When reading settings for front page are updated.
             add_action('update_option_page_on_front', [ $this, 'change_front_page' ], 10, 3);  // When reading settings for front page are updated.
@@ -473,6 +476,12 @@ class OptimizerAdmin
 
             remove_action('save_post', [$this, 'post_clear_cache'], 10, 2);
         }
+    }
+
+    public function post_clear_all_cache()
+    {
+        OptimizerWebPageCache::delete_all_cached_pages();
+        remove_action('save_post', [$this, 'post_clear_all_cache'], 10, 2);
     }
 
     public static function acf_update_fields($post_id, $post)

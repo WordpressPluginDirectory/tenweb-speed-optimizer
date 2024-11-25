@@ -3,7 +3,7 @@
         'name' => 'plugins/tenweb-speed-optimizer',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'c85f4afc87a338ea9686e1e26f10893614f7803b',
+        'reference' => '827ab9bc91d2cf6f4db1233d0b4587c3adf317e9',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -68,7 +68,7 @@
         '10web/authorization' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '7993a20e971e04412f6c11ac81339197fa51bfd5',
+            'reference' => '16a820e0be9f95255404101d2d057394a5ae9d0d',
             'type' => 'library',
             'install_path' => __DIR__ . '/../10web/authorization',
             'aliases' => array(
@@ -133,7 +133,7 @@
         'monperrus/crawler-user-agents' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '6c0133b66cc2a01dc582a0efdcdddab6626b6f48',
+            'reference' => 'e464fa7cb22920f3927cd85d7de32aeedfbf6c85',
             'type' => 'library',
             'install_path' => __DIR__ . '/../monperrus/crawler-user-agents',
             'aliases' => array(
@@ -162,7 +162,7 @@
         'plugins/tenweb-speed-optimizer' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'c85f4afc87a338ea9686e1e26f10893614f7803b',
+            'reference' => '827ab9bc91d2cf6f4db1233d0b4587c3adf317e9',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -178,9 +178,9 @@
             'dev_requirement' => false,
         ),
         'symfony/filesystem' => array(
-            'pretty_version' => 'v5.4.44',
-            'version' => '5.4.44.0',
-            'reference' => '76c3818964e9d32be3862c9318ae3ba9aa280ddc',
+            'pretty_version' => 'v5.4.45',
+            'version' => '5.4.45.0',
+            'reference' => '57c8294ed37d4a055b77057827c67f9558c95c54',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/filesystem',
             'aliases' => array(),

@@ -96,3 +96,15 @@ $tenweb_regions = array(
 	"us-west1" => "The Dalles, Oregon, USA",
 	"us-west2" => "Los Angeles, California, USA"
 );
+
+global $tenweb_firebaseConfig;
+
+$tenweb_firebaseConfig = [
+    'apiKey' => "AIzaSyBP3zPfSTMZxUqJsfmHMd6EJV2aITZ-3FY",
+    'authDomain'=> "copilot-dev-64f1d.firebaseapp.com",
+    'projectId'=> "copilot-dev-64f1d",
+    'storageBucket'=> "copilot-dev-64f1d.appspot.com",
+    'messagingSenderId'=> "101114320744",
+    'appId'=> "1:101114320744:web:3a98c2010c93b6e7a0a8dd",
+    'databaseURL' => "https://copilot-dev-64f1d.firebaseio.com",
+];

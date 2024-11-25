@@ -12,6 +12,7 @@ class Helper
 
     private static $instance;
     private static $network_domain_id;
+    private static $auto_update_plugins;
     private $login_instance;
     public static $products_raw_data = array();
 
@@ -718,6 +719,7 @@ class Helper
         self::$plugins_state = array();
         self::$addons_state = array();
         self::$themes_state = array();
+        self::$auto_update_plugins = get_site_option('auto_update_plugins', array());
 
         $site_installed_plugins = get_plugins();
         //if domain hosted on 10Web
@@ -782,6 +784,8 @@ class Helper
                 $state->set_active($file_name);
                 $state->set_tenweb_product(false);
                 $state->set_other_wp_info($file_name, $installed_plugin, self::get_installed_plugins_wp_info());
+                //$state->set_is_autoupdate_enabled(in_array($file_name, self::$auto_update_plugins, true));
+
 
                 self::$plugins_state[] = $state;
             }
@@ -923,6 +927,7 @@ class Helper
                 $state->set_active($plugin_slug);
                 $state->set_is_paid($plugin_data['current_version']);
                 $state->set_other_wp_info($plugin_slug, $installed_plugin, $installed_plugins_info);
+                //$state->set_is_autoupdate_enabled(in_array($plugin_slug, self::$auto_update_plugins, true));
 
 
                 if ($addons == true) {
